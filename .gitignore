@@ -1,3 +1,5 @@
+# Plantilla obtenida de https://github.com/flutter/flutter/blob/master/.gitignore
+
 # Miscellaneous
 *.class
 *.lock
@@ -124,3 +126,8 @@ app.*.symbols
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
+
+
+# Propios
+Tareas/*/.gitignore
+Tareas/*/screenshot
