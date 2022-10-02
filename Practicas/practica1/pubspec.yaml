@@ -1,0 +1,34 @@
+name: FindTrackApp
+description: Práctica Integradora 1; 727272 - Cordero Hernández Marco Ricardo
+publish_to: 'none' 
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.17.6 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  avatar_glow: 
+  bloc:
+  equatable:
+  flutter_dotenv:
+  flutter_launcher_icons:
+  font_awesome_flutter:
+  http:
+  path_provider:
+  permission_handler: ^9.2.0
+  record: ^4.3.1
+  url_launcher:
+  flutter_bloc:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter  
+
+flutter:  
+  uses-material-design: true
+  assets:
+    - assets/
+    - .env
