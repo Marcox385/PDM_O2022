@@ -31,13 +31,13 @@ class IdentifyScreen extends StatelessWidget {
                         albumTitle: response['result']['album'] ?? '',
                         artistName: response['result']['artist'] ?? '',
                         publishDate: response['result']['release_date'] ?? '',
-                        linkSpotify: response['result']['spotify']
+                        linkSpotify: response['result']['spotify']?
                                 ['external_urls']['spotify'] ??
                             '',
                         linkList: response['result']['song_link'] ?? '',
                         linkApple:
-                            response['result']['apple_music']['url'] ?? '',
-                        albumImg: response['result']['spotify']['album']
+                            response['result']['apple_music']?['url'] ?? '',
+                        albumImg: response['result']['spotify']?['album']
                                 ['images'][0]['url'] ??
                             '',
                       )));
@@ -167,7 +167,7 @@ class SingleFavScreen extends StatelessWidget {
   Future<void> _launchUrl(String rawUrl) async {
     Uri _url = Uri.parse(rawUrl);
 
-    if (!await launchUrl(_url)) {
+    if (!await launchUrl(_url, mode: LaunchMode.externalApplication)) {
       throw 'Unable to launch URL';
     }
   }

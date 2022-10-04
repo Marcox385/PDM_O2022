@@ -25,9 +25,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       darkTheme: mainTheme,
       theme: mainTheme,
-      // home: Scaffold(
-      //   body: IdentifyScreen(),
-      // ),
       home: MultiBlocProvider(
         providers: [
           BlocProvider<IdentifyBloc>(

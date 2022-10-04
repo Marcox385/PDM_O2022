@@ -3,12 +3,20 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FavItem extends StatelessWidget {
-  const FavItem({super.key});
+  final String albumImg, songTitle, artistName, linkList;
+
+  FavItem({
+    super.key,
+    required this.albumImg,
+    required this.songTitle,
+    required this.artistName,
+    required this.linkList
+  });
 
   Future<void> _launchUrl(String rawUrl) async {
     Uri _url = Uri.parse(rawUrl);
 
-    if (!await launchUrl(_url)) {
+    if (!await launchUrl(_url, mode: LaunchMode.externalApplication)) {
       throw 'Unable to launch URL';
     }
   }
@@ -27,7 +35,7 @@ class FavItem extends StatelessWidget {
                   TextButton(
                       child: Text('Continuar'),
                       onPressed: () {
-                        _launchUrl('https://lis.tn/Warriors');
+                        _launchUrl('$this.linkList');
                         Navigator.pop(context);
                       })
                 ]));
@@ -44,7 +52,7 @@ class FavItem extends StatelessWidget {
             Positioned(
                 child: GestureDetector(
               child: Image.network(
-                  'https://m.media-amazon.com/images/I/713N4ZIYsEL._AC_SX522_.jpg'),
+                  '$this.albumImg'),
               onTap: () => {_alertDialog(context)},
             )),
             Positioned(
@@ -63,12 +71,12 @@ class FavItem extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        "songTitle",
+                        "$this.songTitle",
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        "artistName",
+                        "$this.artistName",
                         style: TextStyle(color: Colors.white),
                       ),
                     ],
