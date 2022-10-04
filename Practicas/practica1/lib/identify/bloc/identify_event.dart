@@ -8,3 +8,14 @@ abstract class IdentifyEvent extends Equatable {
 }
 
 class IdentifyAudioEvent extends IdentifyEvent {}
+
+class AudioRecordedEvent extends IdentifyEvent {}
+
+class AudioIdentifiedEvent extends IdentifyEvent {
+  final dynamic body;
+
+  AudioIdentifiedEvent({required this.body});
+
+  @override
+  List<Object> get props => [body];
+}

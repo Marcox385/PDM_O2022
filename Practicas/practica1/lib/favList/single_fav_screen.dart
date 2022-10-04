@@ -1,3 +1,4 @@
+import 'package:FindTrackApp/identify/identify_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -5,14 +6,25 @@ import 'package:url_launcher/url_launcher.dart';
 class SingleFavScreen extends StatelessWidget {
   final double imgSize = 370, iconSize = 50;
 
-  final String songTitle, albumTitle, artistName, publishDate;
+  final String albumImg,
+      songTitle,
+      albumTitle,
+      artistName,
+      publishDate,
+      linkSpotify,
+      linkList,
+      linkApple;
 
   const SingleFavScreen(
       {super.key,
       required this.songTitle,
       required this.albumTitle,
       required this.artistName,
-      required this.publishDate});
+      required this.publishDate,
+      required this.linkSpotify,
+      required this.linkList,
+      required this.linkApple,
+      required this.albumImg});
 
   Future<void> _launchUrl(String rawUrl) async {
     Uri _url = Uri.parse(rawUrl);
@@ -26,6 +38,13 @@ class SingleFavScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(FontAwesomeIcons.arrowLeft),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => IdentifyScreen()));
+            },
+          ),
           title: Text('Here you go'),
           actions: [Icon(FontAwesomeIcons.solidHeart), SizedBox(width: 10)],
         ),
@@ -33,7 +52,7 @@ class SingleFavScreen extends StatelessWidget {
           child: Column(
             children: [
               Image.network(
-                'https://m.media-amazon.com/images/I/713N4ZIYsEL._AC_SX522_.jpg',
+                '$albumImg',
                 height: imgSize,
               ),
               SizedBox(height: 50),
@@ -63,21 +82,24 @@ class SingleFavScreen extends StatelessWidget {
                     iconSize: this.iconSize,
                     tooltip: 'Ver en Spotify',
                     onPressed: () async {
-                      _launchUrl(
-                          'https://open.spotify.com/album/20r762YmB5HeofjMCiPMLv');
+                      _launchUrl('${this.linkSpotify}');
                     },
                   ),
                   IconButton(
                     icon: Icon(FontAwesomeIcons.podcast),
                     iconSize: this.iconSize,
                     tooltip: 'Ver links',
-                    onPressed: () {},
+                    onPressed: () async {
+                      _launchUrl('${this.linkList}');
+                    },
                   ),
                   IconButton(
                     icon: Icon(FontAwesomeIcons.apple),
                     iconSize: this.iconSize,
                     tooltip: 'Ver en Apple Music',
-                    onPressed: () {},
+                    onPressed: () async {
+                      _launchUrl('${this.linkApple}');
+                    },
                   )
                 ],
               )

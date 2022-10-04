@@ -1,10 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
@@ -15,28 +16,46 @@ part 'identify_state.dart';
 class IdentifyBloc extends Bloc<IdentifyEvent, IdentifyState> {
   IdentifyBloc() : super(IdentifyInitial()) {
     on<IdentifyAudioEvent>(_identifySong);
+    on<AudioRecordedEvent>(_audioRecorded);
+    on<AudioIdentifiedEvent>(_audioIdentified);
   }
 
-  FutureOr<void> _identifySong(IdentifyAudioEvent event, emit) async {
+  void _audioRecorded(AudioRecordedEvent event, emit) {
+    emit(SuccessWritingState());
+  }
+
+  void _audioIdentified(AudioIdentifiedEvent event, emit) {
+    emit(IdentifiedSuccessState(body: event.body));
+  }
+
+  Future _identifySong(IdentifyAudioEvent event, emit) async {
     try {
       emit(WritingAudioState());
-      await _recordToFile(); // Record
-      emit(SuccessWritingState());
+      await _recordToFile().then((value) {
+        Future.delayed(Duration(milliseconds: 5000), () {
+          add(AudioRecordedEvent());
+        }).then((value) {
+          Future.delayed(Duration(milliseconds: 1000), () async {
+            var _endpoint = 'https://api.audd.io/recognize';
+            var _filePath = await getApplicationDocumentsDirectory();
+            var _fileBinary =
+                await File(_filePath.path + '/recording.mp3').readAsBytes();
 
-      var _endpoint = 'https://api.audd.io/recognize';
-      var _file = await getApplicationDocumentsDirectory();
-      var _songBody =
-          await post(Uri.parse(_endpoint), headers: <String, String>{
-        'api_token': dotenv.env['API_KEY']!,
-        'file': _file.path,
+            var _request = await http.post(Uri.parse(_endpoint), body: {
+              'api_token': dotenv.env['API_KEY'],
+              'return': 'apple_music,spotify',
+              'audio': base64.encode(_fileBinary),
+            });
+
+            if (_request.statusCode != 200 ||
+                _request.statusCode != HttpStatus.ok) {
+              throw HttpException('Bad request');
+            }
+
+            add(AudioIdentifiedEvent(body: _request.body));
+          });
+        });
       });
-
-      if (_songBody.statusCode != 400 ||
-          _songBody.statusCode != HttpStatus.ok) {
-        throw HttpException('Bad request');
-      }
-
-      emit(IdentifiedSuccessState(body: _songBody.body));
     } on FileSystemException catch (e) {
       emit(FailedWritingState(error: 'No se ha podido reconocer el audio\n$e'));
     } on HttpException catch (e) {
@@ -57,7 +76,7 @@ class IdentifyBloc extends Bloc<IdentifyEvent, IdentifyState> {
   }
 
   // Record and save audio
-  Future<void> _recordToFile() async {
+  Future<bool> _recordToFile() async {
     final record = Record();
 
     // Lack of writing file or microphone/recording permission(s)
@@ -68,8 +87,11 @@ class IdentifyBloc extends Bloc<IdentifyEvent, IdentifyState> {
     final dir = await getApplicationDocumentsDirectory();
     await record.start(path: '${dir.path}/recording.mp3');
 
-    Timer(Duration(milliseconds: 5000), () async {
+    Future.delayed(Duration(milliseconds: 5000), () async {
       await record.stop();
+      return true;
     });
+
+    return false;
   }
 }

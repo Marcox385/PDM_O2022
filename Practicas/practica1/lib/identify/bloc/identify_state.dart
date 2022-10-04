@@ -20,7 +20,7 @@ class FailedWritingState extends IdentifyState { // File not saved
 }
 
 class IdentifiedSuccessState extends IdentifyState { // Song identified
-  final String body;
+  final dynamic body;
 
   IdentifiedSuccessState({required this.body});
 
