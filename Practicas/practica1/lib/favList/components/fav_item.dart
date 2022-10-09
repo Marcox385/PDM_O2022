@@ -5,13 +5,12 @@ import 'package:url_launcher/url_launcher.dart';
 class FavItem extends StatelessWidget {
   final String albumImg, songTitle, artistName, linkList;
 
-  FavItem({
-    super.key,
-    required this.albumImg,
-    required this.songTitle,
-    required this.artistName,
-    required this.linkList
-  });
+  FavItem(
+      {super.key,
+      required this.albumImg,
+      required this.songTitle,
+      required this.artistName,
+      required this.linkList});
 
   Future<void> _launchUrl(String rawUrl) async {
     Uri _url = Uri.parse(rawUrl);
@@ -35,7 +34,7 @@ class FavItem extends StatelessWidget {
                   TextButton(
                       child: Text('Continuar'),
                       onPressed: () {
-                        _launchUrl('$this.linkList');
+                        _launchUrl('$linkList');
                         Navigator.pop(context);
                       })
                 ]));
@@ -51,8 +50,7 @@ class FavItem extends StatelessWidget {
           children: [
             Positioned(
                 child: GestureDetector(
-              child: Image.network(
-                  '$this.albumImg'),
+              child: Image.network('$albumImg'),
               onTap: () => {_alertDialog(context)},
             )),
             Positioned(
@@ -71,12 +69,12 @@ class FavItem extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        "$this.songTitle",
+                        "$songTitle",
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        "$this.artistName",
+                        "$artistName",
                         style: TextStyle(color: Colors.white),
                       ),
                     ],

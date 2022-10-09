@@ -1,3 +1,4 @@
+import 'package:FindTrackApp/favList/fav_list.dart';
 import 'package:FindTrackApp/identify/identify_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -46,7 +47,15 @@ class SingleFavScreen extends StatelessWidget {
             },
           ),
           title: Text('Here you go'),
-          actions: [Icon(FontAwesomeIcons.solidHeart), SizedBox(width: 10)],
+          actions: [
+            IconButton(
+              icon: Icon(FontAwesomeIcons.solidHeart),
+              onPressed: () {
+                // FavList.addSong(, values)
+              },
+            ),
+            SizedBox(width: 10)
+          ],
         ),
         body: Center(
           child: Column(

@@ -1,0 +1,26 @@
+name: tarea3
+description: Libreria
+publish_to: 'none' 
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.18.1 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  equatable:
+  flutter_bloc:
+  http:
+  share_plus:
+  shimmer:
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
