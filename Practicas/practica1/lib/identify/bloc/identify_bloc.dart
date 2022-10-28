@@ -49,12 +49,9 @@ class IdentifyBloc extends Bloc<IdentifyEvent, IdentifyState> {
 
             if (_request.statusCode != 200 ||
                 _request.statusCode != HttpStatus.ok) {
-              // throw HttpException('Bad request');
-              print(_request.body);
               emit(IdentifiedErrorState(error: 'Petición incorrecta'));
             }
 
-            print(_request.body);
             add(AudioIdentifiedEvent(body: _request.body));
           });
         });
