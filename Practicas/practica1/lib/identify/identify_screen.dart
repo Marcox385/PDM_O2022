@@ -23,6 +23,21 @@ class IdentifyScreen extends StatelessWidget {
               jsonDecode(context.read<IdentifyBloc>().state.props[0].toString())
                   as Map<String, dynamic>;
 
+          if (response['result'] == null) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content:
+                  Text('No se encontraron resultados\nIntente de nuevo...'),
+              duration: Duration(milliseconds: 5000),
+              action: SnackBarAction(
+                label: 'OK',
+                onPressed: () {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                },
+              ),
+            ));
+            return;
+          }
+
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -31,8 +46,8 @@ class IdentifyScreen extends StatelessWidget {
                         albumTitle: response['result']['album'] ?? '',
                         artistName: response['result']['artist'] ?? '',
                         publishDate: response['result']['release_date'] ?? '',
-                        linkSpotify: response['result']['spotify']?
-                                ['external_urls']['spotify'] ??
+                        linkSpotify: response['result']['spotify']
+                                ?['external_urls']['spotify'] ??
                             '',
                         linkList: response['result']['song_link'] ?? '',
                         linkApple:
