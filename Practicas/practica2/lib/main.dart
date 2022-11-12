@@ -1,4 +1,4 @@
-import 'package:findtrackapp_v2/doc_creation.dart';
+import 'package:findtrackapp_v2/favList/favorite_screen.dart';
 import 'package:findtrackapp_v2/identify/identify_screen.dart';
 import 'package:findtrackapp_v2/login/auth_service.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -35,7 +35,6 @@ class MyApp extends StatelessWidget {
         theme: mainTheme,
         // home: AuthService().handleAuthState()
         home: IdentifyScreen()
-        // home: DocCreation()
     );
   }
 }

@@ -3,14 +3,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FavItem extends StatelessWidget {
-  final String albumImg, songTitle, artistName, linkList;
+  final String song_id, img_url, song_title, artist, song_url;
 
-  FavItem(
-      {super.key,
-      required this.albumImg,
-      required this.songTitle,
-      required this.artistName,
-      required this.linkList});
+  FavItem({
+    super.key,
+    required this.song_id,
+    required this.img_url,
+    required this.song_title,
+    required this.artist,
+    required this.song_url,
+  });
 
   Future<void> _launchUrl(String rawUrl) async {
     Uri _url = Uri.parse(rawUrl);
@@ -34,7 +36,7 @@ class FavItem extends StatelessWidget {
                   TextButton(
                       child: Text('Continuar'),
                       onPressed: () {
-                        _launchUrl('$linkList');
+                        _launchUrl('$song_url');
                         Navigator.pop(context);
                       })
                 ]));
@@ -50,7 +52,10 @@ class FavItem extends StatelessWidget {
           children: [
             Positioned(
                 child: GestureDetector(
-              child: Image.network('$albumImg'),
+              child: AspectRatio(
+                aspectRatio: 4 / 3,
+                child: Image.network('$img_url', fit: BoxFit.cover),
+              ),
               onTap: () => {_alertDialog(context)},
             )),
             Positioned(
@@ -61,7 +66,7 @@ class FavItem extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(8.0),
                   decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor.withOpacity(0.95),
+                      color: Theme.of(context).primaryColor.withOpacity(0.85),
                       borderRadius: BorderRadius.only(
                           topRight: Radius.circular(25),
                           bottomLeft: Radius.circular(5),
@@ -69,12 +74,16 @@ class FavItem extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        "$songTitle",
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
+                        "$song_title",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall!
+                            .copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        "$artistName",
+                        "$artist",
                         style: TextStyle(color: Colors.white),
                       ),
                     ],
@@ -87,7 +96,12 @@ class FavItem extends StatelessWidget {
               top: 0,
               left: 0,
               child: IconButton(
-                  icon: Icon(FontAwesomeIcons.solidHeart), onPressed: () {}),
+                  icon: Icon(
+                    FontAwesomeIcons.solidHeart,
+                    color: Colors.red,
+                  ),
+                  onPressed: () {} // TODO
+                  ),
             ),
           ],
         ),

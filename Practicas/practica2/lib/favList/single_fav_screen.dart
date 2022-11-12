@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 class SingleFavScreen extends StatelessWidget {
   final double imgSize = 370, iconSize = 50;
 
+  final dynamic song_id;
   final String albumImg,
       songTitle,
       albumTitle,
@@ -18,6 +19,7 @@ class SingleFavScreen extends StatelessWidget {
 
   const SingleFavScreen(
       {super.key,
+      required this.song_id,
       required this.songTitle,
       required this.albumTitle,
       required this.artistName,
@@ -50,9 +52,47 @@ class SingleFavScreen extends StatelessWidget {
           actions: [
             IconButton(
               icon: Icon(FontAwesomeIcons.solidHeart),
-              onPressed: () {
-                // FavList.addSong(, values)
-              },
+              tooltip: 'Agregar a favoritos',
+              onPressed: () => showDialog<String>(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  title: Text('Agregar a favoritos'),
+                  content: Text(
+                      'El elemento será agregado a tus favoritos\n¿Quieres continuar?'),
+                  actions: [
+                    TextButton(
+                      child: Text('Cancelar',
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor)),
+                      onPressed: () => Navigator.pop(context, 'Cancel'),
+                    ),
+                    TextButton(
+                      child: Text('Continuar',
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor)),
+                      onPressed: () async {
+                        Navigator.pop(context, 'Continuar');
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Procesando..')));
+
+                        Future<bool> added =
+                            FavList.addToFavorites(this.song_id, {
+                          'img_url': this.albumImg,
+                          'song_title': this.songTitle,
+                          'artist': this.artistName,
+                          'song_url': this.linkList
+                        });
+
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(await added == true
+                                ? 'Agregado a favoritos...'
+                                : 'Esta canción ya se encuentra en favoritos')));
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ),
             SizedBox(width: 10)
           ],
@@ -66,18 +106,22 @@ class SingleFavScreen extends StatelessWidget {
               ),
               SizedBox(height: 50),
               Text('$songTitle',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 30.0)),
               Text('$albumTitle',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 18.0)),
               Text('$artistName',
+                  textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.grey, fontSize: 16.0)),
               Text('$publishDate',
+                  textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.grey, fontSize: 16.0)),
               SizedBox(height: 30),
               Divider(),

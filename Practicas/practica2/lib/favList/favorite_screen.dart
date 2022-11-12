@@ -12,16 +12,20 @@ class FavoriteScreen extends StatelessWidget {
       body: ListView.builder(
         itemCount: FavList.favList.length,
         itemBuilder: (BuildContext context, int index) {
-          String albumImg = FavList.favList[index]['albumImg'];
-          String songTitle = FavList.favList[index]['songTitle'];
-          String artistName = FavList.favList[index]['artistName'];
-          String linkList = FavList.favList[index]['linkList'];
+          String song_id = FavList.favList[index]['song_id'];
+          String img_url = FavList.favList[index]['img_url'];
+          String song_title = FavList.favList[index]['song_title'];
+          String artist = FavList.favList[index]['artist'];
+          String song_url = FavList.favList[index]['song_url'];
+
+          print(FavList.favList);
 
           return FavItem(
-              albumImg: albumImg,
-              songTitle: songTitle,
-              artistName: artistName,
-              linkList: linkList);
+              song_id: song_id,
+              img_url: img_url,
+              song_title: song_title,
+              artist: artist,
+              song_url: song_url);
         },
       ),
     );

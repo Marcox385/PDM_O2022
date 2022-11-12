@@ -31,7 +31,13 @@ class IdentifyBloc extends Bloc<IdentifyEvent, IdentifyState> {
   Future _identifySong(IdentifyAudioEvent event, emit) async {
     try {
       emit(WritingAudioState());
-      await _recordToFile();
+
+      final recorded = await _recordToFile();
+      if (!recorded) {
+        emit(FailedWritingState(error: 'Error en grabación de audio'));
+        return;
+      }
+
       add(AudioRecordedEvent());
       await Future.delayed(Duration(milliseconds: 1500));
       var _endpoint = 'https://api.audd.io/recognize';
@@ -49,7 +55,7 @@ class IdentifyBloc extends Bloc<IdentifyEvent, IdentifyState> {
         emit(IdentifiedErrorState(error: 'Petición incorrecta'));
       }
 
-      add(AudioIdentifiedEvent(body: _request.body));
+      add(AudioIdentifiedEvent(body: utf8.decode(_request.bodyBytes)));
     } on FileSystemException catch (e) {
       emit(FailedWritingState(error: 'No se ha podido reconocer el audio\n$e'));
     } on HttpException catch (e) {
@@ -83,7 +89,6 @@ class IdentifyBloc extends Bloc<IdentifyEvent, IdentifyState> {
       await record.start(path: '${dir.path}/recording.mp3');
       await Future.delayed(Duration(milliseconds: 5000));
       await record.stop();
-
       return true;
     } catch (e) {
       return false;

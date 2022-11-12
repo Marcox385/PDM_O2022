@@ -2,12 +2,11 @@ import 'dart:convert';
 
 import 'package:findtrackapp_v2/favList/favorite_screen.dart';
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:findtrackapp_v2/favList/single_fav_screen.dart';
 import 'package:findtrackapp_v2/login/auth_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'bloc/identify_bloc.dart';
 
@@ -44,6 +43,7 @@ class IdentifyScreen extends StatelessWidget {
               context,
               MaterialPageRoute(
                   builder: (context) => SingleFavScreen(
+                        song_id: response['result']['spotify']?['id'] ?? '',
                         songTitle: response['result']['title'] ?? '',
                         albumTitle: response['result']['album'] ?? '',
                         artistName: response['result']['artist'] ?? '',
@@ -116,7 +116,7 @@ class IdentifyScreen extends StatelessWidget {
               ),
             ),
             Tooltip(
-              message: 'Salir',
+              message: 'Cerrar sesión',
               child: ElevatedButton(
                 child: Icon(FontAwesomeIcons.powerOff, color: Colors.black),
                 style: ButtonStyle(
@@ -128,12 +128,6 @@ class IdentifyScreen extends StatelessWidget {
                   AuthService().signOut();
                 },
               ),
-            ),
-            ElevatedButton(
-              child: Icon(Icons.info),
-              onPressed: () {
-                print(FirebaseAuth.instance.currentUser!.uid);
-              },
             )
           ],
         )
@@ -182,104 +176,5 @@ class Animated extends StatelessWidget {
       child: CircleAvatar(
           child: Image.asset('assets/icon.png'), radius: icon_radius),
     );
-  }
-}
-
-class SingleFavScreen extends StatelessWidget {
-  final double imgSize = 370, iconSize = 50;
-
-  final String albumImg,
-      songTitle,
-      albumTitle,
-      artistName,
-      publishDate,
-      linkSpotify,
-      linkList,
-      linkApple;
-
-  const SingleFavScreen(
-      {super.key,
-      required this.songTitle,
-      required this.albumTitle,
-      required this.artistName,
-      required this.publishDate,
-      required this.linkSpotify,
-      required this.linkList,
-      required this.linkApple,
-      required this.albumImg});
-
-  Future<void> _launchUrl(String rawUrl) async {
-    Uri _url = Uri.parse(rawUrl);
-
-    if (!await launchUrl(_url, mode: LaunchMode.externalApplication)) {
-      throw 'Unable to launch URL';
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Here you go'),
-          actions: [Icon(FontAwesomeIcons.solidHeart), SizedBox(width: 10)],
-        ),
-        body: Center(
-          child: Column(
-            children: [
-              Image.network(
-                '$albumImg',
-                height: imgSize,
-              ),
-              SizedBox(height: 50),
-              Text('$songTitle',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30.0)),
-              Text('$albumTitle',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.0)),
-              Text('$artistName',
-                  style: TextStyle(color: Colors.grey, fontSize: 16.0)),
-              Text('$publishDate',
-                  style: TextStyle(color: Colors.grey, fontSize: 16.0)),
-              SizedBox(height: 30),
-              Divider(),
-              Text('Abrir con:'),
-              SizedBox(height: 25),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  IconButton(
-                    icon: Icon(FontAwesomeIcons.spotify),
-                    iconSize: this.iconSize,
-                    tooltip: 'Ver en Spotify',
-                    onPressed: () async {
-                      _launchUrl('${this.linkSpotify}');
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(FontAwesomeIcons.podcast),
-                    iconSize: this.iconSize,
-                    tooltip: 'Ver links',
-                    onPressed: () async {
-                      _launchUrl('${this.linkList}');
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(FontAwesomeIcons.apple),
-                    iconSize: this.iconSize,
-                    tooltip: 'Ver en Apple Music',
-                    onPressed: () async {
-                      _launchUrl('${this.linkApple}');
-                    },
-                  )
-                ],
-              )
-            ],
-          ),
-        ));
   }
 }
