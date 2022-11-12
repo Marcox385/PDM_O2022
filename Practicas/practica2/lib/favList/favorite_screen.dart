@@ -7,25 +7,23 @@ class FavoriteScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FavList favlist = FavList();
+    favlist.getFavorites();
+
     return Scaffold(
       appBar: AppBar(title: Text('Canciones favoritas')),
       body: ListView.builder(
-        itemCount: FavList.favList.length,
+        // itemCount: FavList.favList.length,
+        itemCount: favlist.getFavList.length,
         itemBuilder: (BuildContext context, int index) {
-          String song_id = FavList.favList[index]['song_id'];
-          String img_url = FavList.favList[index]['img_url'];
-          String song_title = FavList.favList[index]['song_title'];
-          String artist = FavList.favList[index]['artist'];
-          String song_url = FavList.favList[index]['song_url'];
-
-          print(FavList.favList);
+          dynamic curr_item = favlist.getFavList[index];
 
           return FavItem(
-              song_id: song_id,
-              img_url: img_url,
-              song_title: song_title,
-              artist: artist,
-              song_url: song_url);
+              song_id: curr_item['song_id'],
+              img_url: curr_item['img_url'],
+              song_title: curr_item['song_title'],
+              artist: curr_item['artist'],
+              song_url: curr_item['song_url']);
         },
       ),
     );

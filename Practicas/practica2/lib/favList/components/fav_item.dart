@@ -1,3 +1,4 @@
+import 'package:findtrackapp_v2/favList/fav_list.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -31,10 +32,14 @@ class FavItem extends StatelessWidget {
                     'Será redirigido a ver opciones para abrir la canción ¿Quieres continuar?'),
                 actions: <Widget>[
                   TextButton(
-                      child: Text('Cancelar'),
+                      child: Text('Cancelar',
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor)),
                       onPressed: () => Navigator.pop(context, 'Cancelar')),
                   TextButton(
-                      child: Text('Continuar'),
+                      child: Text('Continuar',
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor)),
                       onPressed: () {
                         _launchUrl('$song_url');
                         Navigator.pop(context);
@@ -75,6 +80,7 @@ class FavItem extends StatelessWidget {
                     children: [
                       Text(
                         "$song_title",
+                        textAlign: TextAlign.center,
                         style: Theme.of(context)
                             .textTheme
                             .headlineSmall!
@@ -84,6 +90,7 @@ class FavItem extends StatelessWidget {
                       ),
                       Text(
                         "$artist",
+                        textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.white),
                       ),
                     ],
@@ -100,8 +107,41 @@ class FavItem extends StatelessWidget {
                     FontAwesomeIcons.solidHeart,
                     color: Colors.red,
                   ),
-                  onPressed: () {} // TODO
-                  ),
+                  onPressed: () => showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                            title: Text('Eliminar de favoritos'),
+                            content: Text(
+                                'El elemento será eliminado de tus favoritos ¿Quieres continuar?'),
+                            actions: [
+                              TextButton(
+                                child: Text('Cancelar',
+                                    style: TextStyle(
+                                        color: Theme.of(context).primaryColor)),
+                                onPressed: () =>
+                                    Navigator.pop(context, 'Cancel'),
+                              ),
+                              TextButton(
+                                child: Text('Eliminar',
+                                    style: TextStyle(
+                                        color: Theme.of(context).primaryColor)),
+                                onPressed: () async {
+                                  Navigator.pop(context, 'Continuar');
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text('Procesando...')));
+
+                                  FavList aux = FavList();
+                                  aux.deleteFromFavorites(song_id);
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              'Eliminado exitósamente...')));
+                                },
+                              ),
+                            ],
+                          ))),
             ),
           ],
         ),

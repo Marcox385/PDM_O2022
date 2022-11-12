@@ -1,5 +1,3 @@
-import 'package:findtrackapp_v2/favList/favorite_screen.dart';
-import 'package:findtrackapp_v2/identify/identify_screen.dart';
 import 'package:findtrackapp_v2/login/auth_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -13,10 +11,12 @@ Future main() async {
   await Firebase.initializeApp();
 
   // runApp(MyApp());
-  runApp(MultiBlocProvider(providers: [
-    BlocProvider<IdentifyBloc>(
-              create: (BuildContext context) => IdentifyBloc())
-  ], child: MyApp()));
+  runApp(MultiBlocProvider(
+    providers: [
+      BlocProvider<IdentifyBloc>(create: (BuildContext context) => IdentifyBloc())
+    ], 
+    child: MyApp()
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -33,8 +33,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         darkTheme: mainTheme,
         theme: mainTheme,
-        // home: AuthService().handleAuthState()
-        home: IdentifyScreen()
+        home: AuthService().handleAuthState()
     );
   }
 }

@@ -1,10 +1,47 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 
-class FavList {
-  static Map<int, dynamic> favList = {};
+class FavList with ChangeNotifier {
+  static List<Map> favList = [];
 
-  Map<int, dynamic> get favs => favList;
+  List<Map> get getFavList => favList;
+
+  /**
+   * Populate favorite list for visual displaying
+   */
+  Future<List> getFavorites() async {
+    try {
+      favList = await [];
+
+      CollectionReference users =
+          FirebaseFirestore.instance.collection('find_track_app');
+
+      await users
+          .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .get()
+          .then((QuerySnapshot querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          var songs = doc['fav_list']!;
+          var songs_ids = songs.keys;
+
+          songs_ids.forEach((i) {
+            favList.add({
+              'song_id': i,
+              'img_url': songs[i]['img_url'],
+              'song_title': songs[i]['song_title'],
+              'artist': songs[i]['artist'],
+              'song_url': songs[i]['song_url']
+            });
+          });
+        });
+      });
+    } catch (e) {
+      print('Exception occured: $e');
+    } finally {
+      return favList;
+    }
+  }
 
   /**
    * Check song existance in user's favorites
@@ -52,7 +89,20 @@ class FavList {
     return true;
   }
 
-  static bool deleteFromFavorites() {
-    return true;
+  Future<void> deleteFromFavorites(String song_id) async {
+    CollectionReference users =
+        FirebaseFirestore.instance.collection('find_track_app');
+
+    await users
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({'fav_list.$song_id': FieldValue.delete()});
+
+    for (var i = 0; i < favList.length; i++) {
+      if (favList[i]['song_id'] == song_id) {
+        await favList.removeAt(i);
+        notifyListeners();
+        return;
+      }
+    }
   }
 }

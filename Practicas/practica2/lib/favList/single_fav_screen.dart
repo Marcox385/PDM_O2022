@@ -7,9 +7,9 @@ import 'package:url_launcher/url_launcher.dart';
 class SingleFavScreen extends StatelessWidget {
   final double imgSize = 370, iconSize = 50;
 
+  dynamic albumImg;
   final dynamic song_id;
-  final String albumImg,
-      songTitle,
+  final String songTitle,
       albumTitle,
       artistName,
       publishDate,
@@ -17,7 +17,7 @@ class SingleFavScreen extends StatelessWidget {
       linkList,
       linkApple;
 
-  const SingleFavScreen(
+  SingleFavScreen(
       {super.key,
       required this.song_id,
       required this.songTitle,
@@ -39,6 +39,10 @@ class SingleFavScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (albumImg == "")
+      albumImg =
+          'https://images.squarespace-cdn.com/content/v1/5d2e2c5ef24531000113c2a4/1564770295807-EJFN4EE3T23YXLMJMVJ5/image-asset.png?format=1000w';
+
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -74,7 +78,7 @@ class SingleFavScreen extends StatelessWidget {
                         Navigator.pop(context, 'Continuar');
 
                         ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Procesando..')));
+                            SnackBar(content: Text('Procesando...')));
 
                         Future<bool> added =
                             FavList.addToFavorites(this.song_id, {

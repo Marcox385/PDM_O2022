@@ -17,6 +17,7 @@ dependencies:
   http:
   path_provider:
   permission_handler: ^9.2.0
+  provider:
   record: ^4.3.1
   url_launcher:
   # Firebase & Google
