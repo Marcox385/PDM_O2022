@@ -1,8 +1,8 @@
+import 'package:findtrackapp_v2/login/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'dart:async';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,9 +12,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final FirebaseAuth auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -37,10 +34,8 @@ class _LoginScreenState extends State<LoginScreen> {
               Padding(
                 padding: const EdgeInsets.all(32.0),
                 child: Text('Sign In',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline3!
-                        .copyWith(fontWeight: FontWeight.bold)),
+                    style: Theme.of(context).textTheme.headline3!.copyWith(
+                        fontWeight: FontWeight.bold, color: Colors.white)),
               ),
               Image.asset('assets/icon.png', width: 150),
               SizedBox(height: 150),
@@ -52,7 +47,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       minimumSize: Size.fromHeight(40)),
-                  onPressed: () {},
+                  onPressed: () {
+                    AuthService().signInWithGoogle();
+                  },
                 ),
               )
             ],

@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:findtrackapp_v2/favList/favorite_screen.dart';
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:findtrackapp_v2/login/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -123,12 +125,15 @@ class IdentifyScreen extends StatelessWidget {
                   backgroundColor: MaterialStateProperty.all(Colors.white),
                 ),
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => FavoriteScreen()));
+                  AuthService().signOut();
                 },
               ),
+            ),
+            ElevatedButton(
+              child: Icon(Icons.info),
+              onPressed: () {
+                print(FirebaseAuth.instance.currentUser!.uid);
+              },
             )
           ],
         )

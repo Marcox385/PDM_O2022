@@ -31,31 +31,25 @@ class IdentifyBloc extends Bloc<IdentifyEvent, IdentifyState> {
   Future _identifySong(IdentifyAudioEvent event, emit) async {
     try {
       emit(WritingAudioState());
-      await _recordToFile().then((value) {
-        Future.delayed(Duration(milliseconds: 5000), () {
-          add(AudioRecordedEvent());
-        }).then((value) {
-          Future.delayed(Duration(milliseconds: 1000), () async {
-            var _endpoint = 'https://api.audd.io/recognize';
-            var _filePath = await getApplicationDocumentsDirectory();
-            var _fileBinary =
-                await File(_filePath.path + '/recording.mp3').readAsBytes();
+      await _recordToFile();
+      add(AudioRecordedEvent());
+      await Future.delayed(Duration(milliseconds: 1500));
+      var _endpoint = 'https://api.audd.io/recognize';
+      var _filePath = await getApplicationDocumentsDirectory();
+      var _fileBinary =
+          await File(_filePath.path + '/recording.mp3').readAsBytes();
 
-            var _request = await http.post(Uri.parse(_endpoint), body: {
-              'api_token': API_KEY,
-              'return': 'apple_music,spotify',
-              'audio': base64.encode(_fileBinary),
-            });
-
-            if (_request.statusCode != 200 ||
-                _request.statusCode != HttpStatus.ok) {
-              emit(IdentifiedErrorState(error: 'Petición incorrecta'));
-            }
-
-            add(AudioIdentifiedEvent(body: _request.body));
-          });
-        });
+      var _request = await http.post(Uri.parse(_endpoint), body: {
+        'api_token': API_KEY,
+        'return': 'apple_music,spotify',
+        'audio': base64.encode(_fileBinary),
       });
+
+      if (_request.statusCode != 200 || _request.statusCode != HttpStatus.ok) {
+        emit(IdentifiedErrorState(error: 'Petición incorrecta'));
+      }
+
+      add(AudioIdentifiedEvent(body: _request.body));
     } on FileSystemException catch (e) {
       emit(FailedWritingState(error: 'No se ha podido reconocer el audio\n$e'));
     } on HttpException catch (e) {
@@ -84,14 +78,15 @@ class IdentifyBloc extends Bloc<IdentifyEvent, IdentifyState> {
       throw FileSystemException();
     }
 
-    final dir = await getApplicationDocumentsDirectory();
-    await record.start(path: '${dir.path}/recording.mp3');
-
-    Future.delayed(Duration(milliseconds: 5000), () async {
+    try {
+      final dir = await getApplicationDocumentsDirectory();
+      await record.start(path: '${dir.path}/recording.mp3');
+      await Future.delayed(Duration(milliseconds: 5000));
       await record.stop();
-      return true;
-    });
 
-    return false;
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

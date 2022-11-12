@@ -4,6 +4,7 @@
     <!-- Permisos de usuario -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- Acceso a links/https -->
     <queries>
@@ -14,7 +15,7 @@
     </queries>
 
    <application
-        android:label="findtrackapp_v2"
+        android:label="FindTrackApp"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
