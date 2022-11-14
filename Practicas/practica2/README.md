@@ -9,8 +9,8 @@ construir una herramienta más completa y con la posibilidad de almacenar result
 así como loggeo de usuarios
 
 ## Highlights
-* BaaS (Firebase)
+* Integración de BaaS (Firebase)
 * .env -> secrets.dart
 
 ## Demostración
-[Video en Drive]()
+[Video en Drive](https://drive.google.com/file/d/18o44f3LgWrtpAzA3i_H_z21RQeJthqFV/view?usp=sharing)

@@ -14,20 +14,21 @@ class AuthService {
             CollectionReference users =
                 FirebaseFirestore.instance.collection('find_track_app');
 
-            users
+            queryUsers = users
                 .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
                 .get()
                 .then((QuerySnapshot querySnapshot) {
-                  querySnapshot.docs.forEach((doc) {
-                    var songs = doc['fav_list'];
+              querySnapshot.docs.forEach((doc) {
+                print(doc);
+                var songs = doc['fav_list'];
 
-                    if (songs == null) {
-                      users.doc(FirebaseAuth.instance.currentUser!.uid).set({
-                        'uid': FirebaseAuth.instance.currentUser!.uid,
-                        'fav_list': {}
-                    });
+                if (songs == null) {
+                  users.doc(FirebaseAuth.instance.currentUser!.uid).set({
+                    'uid': FirebaseAuth.instance.currentUser!.uid,
+                    'fav_list': {}
+                  });
 
-                    return;
+                  return;
                 }
               });
             });
