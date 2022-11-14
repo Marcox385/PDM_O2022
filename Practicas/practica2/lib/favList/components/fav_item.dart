@@ -1,5 +1,7 @@
-import 'package:findtrackapp_v2/favList/fav_list.dart';
+import 'package:findtrackapp_v2/favList/bloc/delete_fav_bloc.dart';
+// import 'package:findtrackapp_v2/favList/fav_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -128,16 +130,7 @@ class FavItem extends StatelessWidget {
                                 onPressed: () async {
                                   Navigator.pop(context, 'Continuar');
 
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('Procesando...')));
-
-                                  FavList aux = FavList();
-                                  aux.deleteFromFavorites(song_id);
-
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text(
-                                              'Eliminado exitósamente...')));
+                                  BlocProvider.of<DeleteFavBloc>(context).add(DeleteRequestedEvent(song_id: song_id));
                                 },
                               ),
                             ],

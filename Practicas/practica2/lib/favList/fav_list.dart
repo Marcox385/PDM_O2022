@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 
-class FavList with ChangeNotifier {
+class FavList {
   static List<Map> favList = [];
 
-  List<Map> get getFavList => favList;
+  // List<Map> get getFavList => favList;
 
   /**
    * Populate favorite list for visual displaying
@@ -36,6 +35,8 @@ class FavList with ChangeNotifier {
           });
         });
       });
+      FavList.favList = await favList;
+      return favList;
     } catch (e) {
       print('Exception occured: $e');
     } finally {
@@ -77,8 +78,7 @@ class FavList with ChangeNotifier {
    * Try to add song to user's favorites
    * Return value according operation result
    */
-  static Future<bool> addToFavorites(
-      String song_id, Map<String, String> song_values) async {
+  static Future<bool> addToFavorites(String song_id, Map<String, String> song_values) async {
     if (await _checkExistance(song_id) == true) return false;
 
     await FirebaseFirestore.instance
@@ -100,7 +100,6 @@ class FavList with ChangeNotifier {
     for (var i = 0; i < favList.length; i++) {
       if (favList[i]['song_id'] == song_id) {
         await favList.removeAt(i);
-        notifyListeners();
         return;
       }
     }

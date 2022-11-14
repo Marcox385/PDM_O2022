@@ -46,4 +46,3 @@ app.*.map.json
 # Own
 **/secrets.dart
 **/google-services.json
-**/doc_creation.dart

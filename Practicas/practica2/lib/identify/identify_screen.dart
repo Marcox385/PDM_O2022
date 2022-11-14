@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:findtrackapp_v2/favList/bloc/delete_fav_bloc.dart';
 import 'package:findtrackapp_v2/favList/favorite_screen.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:findtrackapp_v2/favList/single_fav_screen.dart';
@@ -108,6 +109,7 @@ class IdentifyScreen extends StatelessWidget {
                   backgroundColor: MaterialStateProperty.all(Colors.white),
                 ),
                 onPressed: () {
+                  BlocProvider.of<DeleteFavBloc>(context).add(FavListEnterEvent());
                   Navigator.push(
                       context,
                       MaterialPageRoute(

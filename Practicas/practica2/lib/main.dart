@@ -1,3 +1,4 @@
+import 'package:findtrackapp_v2/favList/bloc/delete_fav_bloc.dart';
 import 'package:findtrackapp_v2/login/auth_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,8 @@ Future main() async {
   // runApp(MyApp());
   runApp(MultiBlocProvider(
     providers: [
-      BlocProvider<IdentifyBloc>(create: (BuildContext context) => IdentifyBloc())
+      BlocProvider<IdentifyBloc>(create: (BuildContext context) => IdentifyBloc()),
+      BlocProvider<DeleteFavBloc>(create: (BuildContext context) => DeleteFavBloc())
     ], 
     child: MyApp()
   ));
